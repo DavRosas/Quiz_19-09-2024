@@ -1,8 +1,8 @@
 const estudiantes = [];
-let filaAEliminar = null; 
+let filaAEliminar = null;
 
 document.getElementById("registro").addEventListener("submit", function (event) {
-  event.preventDefault(); 
+  event.preventDefault();
 
   const codigo = parseFloat(document.getElementById("codigo").value);
   const nombre = document.getElementById("nombre").value;
@@ -11,47 +11,43 @@ document.getElementById("registro").addEventListener("submit", function (event) 
   const tercer20 = parseFloat(document.getElementById("nota3").value);
   const cuarenta = parseFloat(document.getElementById("nota4").value);
 
-  // Verificar si el código ya existe
-  const existeCodigo = estudiantes.some(estudiante => estudiante.codigo === codigo);
-  const msgElement = document.getElementById("msg");
-  
-  if (existeCodigo) {
-    msgElement.textContent = "El código ya está registrado. Por favor, ingresa un código diferente.";
-    msgElement.style.color = "red"; // Personalizar el estilo del mensaje
-    return; // Salir de la función si el código ya existe
+  // Verifica si el código ya está registrado
+  const codigoExistente = estudiantes.some(estudiante => estudiante.codigo === codigo);
+  const mensaje = document.getElementById("msg");
+
+  if (codigoExistente) {
+    mensaje.textContent = `El código ${codigo} ya está registrado.`;
+    mensaje.style.display = 'block';
   } else {
-    msgElement.textContent = ""; // Limpiar el mensaje si el código es válido
+    mensaje.style.display = 'none';
+
+    const Pprimer20 = primer20 * 0.20;
+    const Psegundo20 = segundo20 * 0.20;
+    const Ptercer20 = tercer20 * 0.20;
+    const Pcuarto20 = cuarenta * 0.40;
+
+    const definitiva = Pprimer20 + Psegundo20 + Ptercer20 + Pcuarto20;
+    const aprobado = definitiva >= 30 ? "A" : "N";
+
+    const estudiante = { codigo, nombre, primer20, segundo20, tercer20, cuarenta, definitiva, aprobado };
+    estudiantes.push(estudiante);
+
+    agregarEstudianteATabla(estudiante);
+    document.getElementById("registro").reset();
   }
-
-  const Pprimer20 = primer20 * 0.20;
-  const Psegundo20 = segundo20 * 0.20;
-  const Ptercer20 = tercer20 * 0.20;
-  const Pcuarto20 = cuarenta * 0.40;
-
-  const definitiva = Pprimer20 + Psegundo20 + Ptercer20 + Pcuarto20;
-  const aprobado = definitiva >= 30 ? "A" : "N";
-
-  const estudiante = {codigo, nombre, primer20, segundo20, tercer20, cuarenta, definitiva, aprobado};
-  estudiantes.push(estudiante);
-
-  console.log(estudiantes);
-
-  agregarEstudianteATabla(estudiante);
-
-  document.getElementById("registro").reset();
 });
 
 function agregarEstudianteATabla(estudiante) {
-  const tablaEstudiantes = document.getElementById("tabla-estudiantes");
-  
+  const tablaEstudiantes = document.getElementById("tbody-estudiantes");
+
   const nuevaFila = document.createElement("tr");
 
   const celdaBorrar = document.createElement("td");
   const btnBorrar = document.createElement("button");
   btnBorrar.textContent = "Borrar";
-  btnBorrar.addEventListener("click", function() {
-    filaAEliminar = nuevaFila; 
-    document.getElementById("modal").style.display = "block"; 
+  btnBorrar.addEventListener("click", function () {
+    filaAEliminar = nuevaFila;
+    document.getElementById("modal").style.display = "block";
   });
   celdaBorrar.appendChild(btnBorrar);
 
@@ -86,15 +82,15 @@ function agregarEstudianteATabla(estudiante) {
   tablaEstudiantes.appendChild(nuevaFila);
 }
 
-document.getElementById("btnConfirmar").addEventListener("click", function() {
+document.getElementById("btnConfirmar").addEventListener("click", function () {
   if (filaAEliminar) {
-    filaAEliminar.parentNode.removeChild(filaAEliminar); 
-    filaAEliminar = null; 
+    filaAEliminar.parentNode.removeChild(filaAEliminar);
+    filaAEliminar = null;
   }
-  document.getElementById("modal").style.display = "none"; 
+  document.getElementById("modal").style.display = "none";
 });
 
-document.getElementById("btnCancelar").addEventListener("click", function() {
-  filaAEliminar = null; 
-  document.getElementById("modal").style.display = "none"; 
+document.getElementById("btnCancelar").addEventListener("click", function () {
+  filaAEliminar = null;
+  document.getElementById("modal").style.display = "none";
 });
